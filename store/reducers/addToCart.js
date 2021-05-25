@@ -13,41 +13,34 @@ export default (state = initialState, action) => {
       const productPrice = addedProduct.price;
       const productTitle = addedProduct.title;
 
+      let updatedOrNewCartItem;
+
       if (state.items[addedProduct.id]) {
         // already have the item in the cart
-        const updatedCartItem = new CartItem(
+        updatedOrNewCartItem = new CartItem(
           state.items[addedProduct.id].quantity + 1,
           productPrice,
           productTitle,
           state.items[addedProduct.id].sum + productPrice
         );
-
-        return {
-          ...state,
-          items: {
-            // ...state,
-            [addedProduct.id]: updatedCartItem,
-          },
-          totalAmount: state.totalAmount + productPrice,
-        };
       } else {
         // if the item is not in the cart
-        const newCartItem = new CartItem(
+        updatedOrNewCartItem = new CartItem(
           1,
           productPrice,
           productTitle,
           productPrice
         );
-
-        return {
-          ...state,
-          items: {
-            ...state.items,
-            [addedProduct.id]: newCartItem,
-          },
-          totalAmount: state.totalAmount + productPrice,
-        };
       }
+
+      return {
+        ...state,
+        items: {
+          ...state.items,
+          [addedProduct.id]: updatedOrNewCartItem,
+        },
+        totalAmount: state.totalAmount + productPrice,
+      };
   }
   return state;
 };
