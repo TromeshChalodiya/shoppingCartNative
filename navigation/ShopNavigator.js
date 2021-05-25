@@ -13,6 +13,7 @@ const ProductsNavigator = createStackNavigator(
   {
     ProductsOverView: { screen: ProductOverViewScreen },
     ProductDetail: ProductDetailScreen,
+    Cart: CartScreen,
   },
   {
     defaultNavigationOptions: {
