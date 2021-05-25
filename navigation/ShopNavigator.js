@@ -11,7 +11,8 @@ import Colors from '../constants/colors';
 
 const ProductsNavigator = createStackNavigator(
   {
-    ProductsOverView: ProductOverViewScreen,
+    ProductsOverView: { screen: ProductOverViewScreen },
+    ProductDetail: ProductDetailScreen,
   },
   {
     defaultNavigationOptions: {
