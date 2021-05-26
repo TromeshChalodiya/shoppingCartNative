@@ -8,6 +8,7 @@ import { composeWithDevTools } from 'redux-devtools-extension';
 
 import productReducer from './store/reducers/product';
 import cartReducer from './store/reducers/addToCart';
+import orderReducer from './store/reducers/order';
 
 import ShopNavigator from './navigation/ShopNavigator';
 
@@ -16,6 +17,7 @@ enableScreens();
 const rootReducer = combineReducers({
   products: productReducer,
   cart: cartReducer,
+  orders: orderReducer,
 });
 
 const store = createStore(rootReducer, composeWithDevTools());
