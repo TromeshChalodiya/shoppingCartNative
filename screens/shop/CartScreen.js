@@ -38,7 +38,7 @@ const CartScreen = () => {
           title='Order Now'
           disabled={cartItems.length === 0}
           onPress={() => {
-            dispatch(orderNow(cartItems, cartTotalAmount.toFixed(2)));
+            dispatch(orderNow(cartItems, cartTotalAmount));
           }}
         />
       </View>
@@ -50,6 +50,7 @@ const CartScreen = () => {
             quantity={itemData.item.quantity}
             title={itemData.item.productTitle}
             amount={itemData.item.sum}
+            deletable
             onRemove={() => {
               dispatch(removeFromCart(itemData.item.productId));
             }}
