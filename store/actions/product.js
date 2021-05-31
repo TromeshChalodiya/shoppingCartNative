@@ -77,7 +77,7 @@ export const createProduct = (title, imageUrl, description, price) => {
 
 export const updateProduct = (id, title, imageUrl, description) => {
   return async (dispatch) => {
-    await fetch(
+    const response = await fetch(
       `https://shopping-cart-3d504-default-rtdb.firebaseio.com/products/${id}.json`,
       {
         method: 'PATCH',
@@ -91,6 +91,10 @@ export const updateProduct = (id, title, imageUrl, description) => {
         }),
       }
     );
+
+    if (!response.ok) {
+      throw new Error('Something went wrong!');
+    }
 
     dispatch({
       type: UPDATE_PRODUCT,
@@ -106,12 +110,16 @@ export const updateProduct = (id, title, imageUrl, description) => {
 
 export const deleteProduct = (productId) => {
   return async (dispatch) => {
-    await fetch(
+    const response = await fetch(
       `https://shopping-cart-3d504-default-rtdb.firebaseio.com/products/${productId}.json`,
       {
         method: 'DELETE',
       }
     );
+
+    if (!response.ok) {
+      throw new Error('Something went wrong!');
+    }
 
     dispatch({
       type: DELETE_PRODUCT,
