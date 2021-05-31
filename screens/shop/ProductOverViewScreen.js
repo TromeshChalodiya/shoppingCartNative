@@ -25,6 +25,7 @@ const ProductOverViewScreen = (props) => {
   const dispatch = useDispatch();
 
   const loadProducts = useCallback(async () => {
+    // console.log('LOAD PRODUCT');
     setError(null);
     setIsLoading(true);
     try {
@@ -34,6 +35,22 @@ const ProductOverViewScreen = (props) => {
     }
     setIsLoading(false);
   }, [dispatch, setError, setIsLoading]);
+
+  /*
+  below effect will run as something change on server side
+  for loading a new product or any changes if so check console
+  in above function when navigate from Admin/Orders to Products
+  */
+  useEffect(() => {
+    const willFocusSub = props.navigation.addListener(
+      'willFocus',
+      loadProducts
+    );
+
+    return () => {
+      willFocusSub.remove();
+    };
+  }, [loadProducts]);
 
   useEffect(() => {
     loadProducts();
