@@ -1,33 +1,40 @@
-import axios from 'axios';
+import Product from '../../models/product';
 
 export const DELETE_PRODUCT = 'DELETE_PRODUCT';
 export const CREATE_PRODUCT = 'CREATE_PRODUCT';
 export const UPDATE_PRODUCT = 'UPDATE_PRODUCT';
+export const SET_PRODUCTS = 'SET_PRODUCTS';
+
+export const fetchProducts = () => {
+  return async (dispatch) => {
+    const response = await fetch(
+      'https://shopping-cart-3d504-default-rtdb.firebaseio.com/product.json'
+    );
+    const resData = await response.json();
+
+    const loadedProduct = [];
+    for (const key in resData) {
+      loadedProduct.push(
+        new Product(
+          key,
+          'u1',
+          resData[key].title,
+          resData[key].imageUrl,
+          resData[key].description,
+          resData[key].price
+        )
+      );
+    }
+
+    dispatch({
+      type: SET_PRODUCTS,
+      products: loadedProduct,
+    });
+  };
+};
 
 export const createProduct = (title, imageUrl, description, price) => {
   return async (dispatch) => {
-    // await axios
-    //   .post(
-    //     'https://shopping-cart-3d504-default-rtdb.firebaseio.com/product.json',
-    //     {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       body: JSON.stringify({
-    //         title,
-    //         imageUrl,
-    //         description,
-    //         price,
-    //       }),
-    //     }
-    //   )
-    //   .then((res) => {
-    //     console.log(res.json());
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-
     const response = await fetch(
       'https://shopping-cart-3d504-default-rtdb.firebaseio.com/product.json',
       {
