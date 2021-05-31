@@ -1,5 +1,14 @@
-import React from 'react';
-import { FlatList, Button, Platform, Alert } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  Button,
+  Platform,
+  Alert,
+  ActivityIndicator,
+  StyleSheet,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 
@@ -11,6 +20,8 @@ import { deleteProduct } from '../../store/actions/product';
 import Colors from '../../constants/colors';
 
 const UserProductsScreen = (props) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   const userProducts = useSelector((state) => state.products.userProducts);
   const dispatch = useDispatch();
 
@@ -18,18 +29,42 @@ const UserProductsScreen = (props) => {
     props.navigation.navigate('EditProduct', { productId: id });
   };
 
-  const deleteHandler = (id) => {
-    Alert.alert('Are you sure?', 'Do you really want to delete this item?', [
-      { text: 'No', style: 'default' },
-      {
-        text: 'Yes',
-        style: 'destructive',
-        onPress: () => {
-          dispatch(deleteProduct(id));
+  useEffect(() => {
+    if (error) {
+      Alert.alert('An error occurred!', error, [{ text: 'Okay' }]);
+    }
+  }, [error]);
+
+  const deleteHandler = useCallback(
+    (id) => {
+      Alert.alert('Are you sure?', 'Do you really want to delete this item?', [
+        { text: 'No', style: 'default' },
+        {
+          text: 'Yes',
+          style: 'destructive',
+          onPress: async () => {
+            setError(null);
+            setIsLoading(true);
+            try {
+              await dispatch(deleteProduct(id));
+            } catch (err) {
+              setError(err.message);
+            }
+            setIsLoading(false);
+          },
         },
-      },
-    ]);
-  };
+      ]);
+    },
+    [dispatch, setError, setIsLoading]
+  );
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size='large' color={Colors.primary} />
+      </View>
+    );
+  }
 
   return (
     <FlatList
@@ -91,5 +126,13 @@ UserProductsScreen.navigationOptions = (navData) => {
     ),
   };
 };
+
+const styles = StyleSheet.create({
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default UserProductsScreen;
