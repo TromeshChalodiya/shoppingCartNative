@@ -1,5 +1,13 @@
-import React from 'react';
-import { View, Text, FlatList, Button, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  Text,
+  FlatList,
+  Button,
+  StyleSheet,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Colors from '../../constants/colors';
@@ -10,6 +18,9 @@ import { removeFromCart } from '../../store/actions/addToCart';
 import { orderNow } from '../../store/actions/order';
 
 const CartScreen = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState();
+  const dispatch = useDispatch();
   const cartTotalAmount = useSelector((state) => state.cart.totalAmount);
   const cartItems = useSelector((state) => {
     const transformedCartItems = [];
@@ -27,7 +38,23 @@ const CartScreen = () => {
     );
   });
 
-  const dispatch = useDispatch();
+  useEffect(() => {
+    if (isError) {
+      Alert.alert('Something went wrong!', isError, [{ text: 'Okay' }]);
+    }
+  }, [isError]);
+
+  const sendOrderHandler = async () => {
+    setIsError(null);
+    setIsLoading(true);
+    try {
+      await dispatch(orderNow(cartItems, cartTotalAmount));
+    } catch (err) {
+      setIsError(err.message);
+    }
+    setIsLoading(false);
+  };
+
   return (
     <View style={styles.screen}>
       <Card style={styles.summary}>
@@ -35,14 +62,16 @@ const CartScreen = () => {
           Total:{' '}
           <Text style={styles.amount}>${cartTotalAmount.toFixed(2)}</Text>
         </Text>
-        <Button
-          color={Colors.accent}
-          title='Order Now'
-          disabled={cartItems.length === 0}
-          onPress={() => {
-            dispatch(orderNow(cartItems, cartTotalAmount));
-          }}
-        />
+        {isLoading ? (
+          <ActivityIndicator size='small' color={Colors.primary} />
+        ) : (
+          <Button
+            color={Colors.accent}
+            title='Order Now'
+            disabled={cartItems.length === 0}
+            onPress={sendOrderHandler}
+          />
+        )}
       </Card>
       <FlatList
         data={cartItems}
@@ -84,6 +113,11 @@ const styles = StyleSheet.create({
   },
   amount: {
     color: Colors.primary,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
