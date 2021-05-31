@@ -7,36 +7,45 @@ export const SET_PRODUCTS = 'SET_PRODUCTS';
 
 export const fetchProducts = () => {
   return async (dispatch) => {
-    const response = await fetch(
-      'https://shopping-cart-3d504-default-rtdb.firebaseio.com/product.json'
-    );
-    const resData = await response.json();
-
-    const loadedProduct = [];
-    for (const key in resData) {
-      loadedProduct.push(
-        new Product(
-          key,
-          'u1',
-          resData[key].title,
-          resData[key].imageUrl,
-          resData[key].description,
-          resData[key].price
-        )
+    try {
+      const response = await fetch(
+        'https://shopping-cart-3d504-default-rtdb.firebaseio.com/products.json'
       );
-    }
+      if (!response.ok) {
+        throw new Error('Something went wwrong!');
+      }
 
-    dispatch({
-      type: SET_PRODUCTS,
-      products: loadedProduct,
-    });
+      const resData = await response.json();
+
+      const loadedProduct = [];
+      for (const key in resData) {
+        loadedProduct.push(
+          new Product(
+            key,
+            'u1',
+            resData[key].title,
+            resData[key].imageUrl,
+            resData[key].description,
+            resData[key].price
+          )
+        );
+      }
+
+      dispatch({
+        type: SET_PRODUCTS,
+        products: loadedProduct,
+      });
+    } catch (err) {
+      // we can send data to analytics as well
+      throw err;
+    }
   };
 };
 
 export const createProduct = (title, imageUrl, description, price) => {
   return async (dispatch) => {
     const response = await fetch(
-      'https://shopping-cart-3d504-default-rtdb.firebaseio.com/product.json',
+      'https://shopping-cart-3d504-default-rtdb.firebaseio.com/products.json',
       {
         method: 'POST',
         headers: {
@@ -52,7 +61,6 @@ export const createProduct = (title, imageUrl, description, price) => {
     );
 
     const resData = await response.json();
-    console.log('====resData=====>', resData);
 
     dispatch({
       type: CREATE_PRODUCT,
