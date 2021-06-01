@@ -43,9 +43,10 @@ export const fetchProducts = () => {
 };
 
 export const createProduct = (title, imageUrl, description, price) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     const response = await fetch(
-      'https://shopping-cart-3d504-default-rtdb.firebaseio.com/products.json',
+      `https://shopping-cart-3d504-default-rtdb.firebaseio.com/products.json?auth=${token}`,
       {
         method: 'POST',
         headers: {
@@ -76,9 +77,10 @@ export const createProduct = (title, imageUrl, description, price) => {
 };
 
 export const updateProduct = (id, title, imageUrl, description) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     const response = await fetch(
-      `https://shopping-cart-3d504-default-rtdb.firebaseio.com/products/${id}.json`,
+      `https://shopping-cart-3d504-default-rtdb.firebaseio.com/products/${id}.json?auth=${token}`,
       {
         method: 'PATCH',
         headers: {
@@ -109,9 +111,10 @@ export const updateProduct = (id, title, imageUrl, description) => {
 };
 
 export const deleteProduct = (productId) => {
-  return async (dispatch) => {
+  return async (dispatch, getState) => {
+    const token = getState().auth.token;
     const response = await fetch(
-      `https://shopping-cart-3d504-default-rtdb.firebaseio.com/products/${productId}.json`,
+      `https://shopping-cart-3d504-default-rtdb.firebaseio.com/products/${productId}.json?auth=${token}`,
       {
         method: 'DELETE',
       }
