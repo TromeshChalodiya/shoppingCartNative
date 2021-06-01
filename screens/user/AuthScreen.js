@@ -42,7 +42,7 @@ const formReducer = (state, action) => {
   return state;
 };
 
-const AuthScreen = () => {
+const AuthScreen = (props) => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setError] = useState(false);
@@ -84,11 +84,12 @@ const AuthScreen = () => {
             state.inputValues.password
           )
         );
+        props.navigation.navigate('Shop');
       }
     } catch (err) {
       setError(err.message);
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
 
   const inputChangeHandler = useCallback(
