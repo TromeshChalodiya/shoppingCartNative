@@ -9,6 +9,7 @@
     "debug": "open 'rndebugger://set-debugger-loc?host=localhost&port=19000'"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.13.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-navigation/native": "^5.9.4",
     "axios": "^0.21.1",
