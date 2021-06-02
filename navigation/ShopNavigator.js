@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import { Platform, SafeAreaView, Button, View } from 'react-native';
+import {
+  Platform,
+  SafeAreaView,
+  Button,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import { createDrawerNavigator, DrawerItems } from 'react-navigation-drawer';
 import { Ionicons } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
@@ -101,6 +107,24 @@ const ShopNavigator = createDrawerNavigator(
     },
     contentComponent: (props) => {
       const dispatch = useDispatch();
+      const [isLoading, setIsLoading] = useState(false);
+
+      const authLogout = () => {
+        setIsLoading(true);
+        dispatch(AuthActions.logout());
+        setIsLoading(true);
+      };
+
+      if (isLoading) {
+        return (
+          <View
+            style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+          >
+            <ActivityIndicator size='large' color={Colors.primary} />
+          </View>
+        );
+      }
+
       return (
         <View style={{ flex: 1, paddingTop: 50 }}>
           <SafeAreaView forceInset={{ top: 'always', horizontal: 'never' }}>
@@ -108,9 +132,7 @@ const ShopNavigator = createDrawerNavigator(
             <Button
               title='Logout'
               color={Colors.primary}
-              onPress={() => {
-                dispatch(AuthActions.logout());
-              }}
+              onPress={authLogout}
             />
           </SafeAreaView>
         </View>
