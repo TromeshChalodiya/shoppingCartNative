@@ -17,7 +17,7 @@ class Order {
     //   minute: '2-digit',
     // });
 
-    return moment(this.date).format('MMMM Do YYYY, hh:mm');
+    return moment(this.date).format('MMMM Do YYYY, hh:mm a');
   }
 }
 
