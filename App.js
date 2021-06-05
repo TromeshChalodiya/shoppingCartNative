@@ -5,6 +5,7 @@ import * as Font from 'expo-font';
 import AppLoading from 'expo-app-loading';
 import { enableScreens } from 'react-native-screens';
 import ReduxThunk from 'redux-thunk';
+import * as Notifications from 'expo-notifications';
 
 import productReducer from './store/reducers/product';
 import cartReducer from './store/reducers/addToCart';
@@ -14,6 +15,14 @@ import authReducer from './store/reducers/auth';
 import NavigationContainer from './navigation/NavigationContainer';
 
 enableScreens();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => {
+    return {
+      shouldShowAlert: true,
+    };
+  },
+});
 
 const rootReducer = combineReducers({
   products: productReducer,
