@@ -15,6 +15,7 @@ export default (state = initialState, action) => {
       const addedProduct = action.product;
       const productPrice = addedProduct.price;
       const productTitle = addedProduct.title;
+      const pushToken = addedProduct.pushToken;
 
       let updatedOrNewCartItem;
 
@@ -24,6 +25,7 @@ export default (state = initialState, action) => {
           state.items[addedProduct.id].quantity + 1,
           productPrice,
           productTitle,
+          pushToken,
           state.items[addedProduct.id].sum + productPrice
         );
       } else {
@@ -31,6 +33,7 @@ export default (state = initialState, action) => {
           1,
           productPrice,
           productTitle,
+          pushToken,
           productPrice
         );
       }
